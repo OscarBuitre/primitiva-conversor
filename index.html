@@ -1,1 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Conversor Reducidas</title>
+
+<style>
+
+body{
+  margin:0;
+  padding:0;
+  background:#f2f2f2;
+  font-family:Arial;
+}
+
+.conv-container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+  background:#fff;
+  min-height:100vh;
+  box-sizing:border-box;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.conv-input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:1px solid #ddd;
+  border-radius:6px;
+  font-size:14px;
+  box-sizing:border-box;
+}
+
+#contador{
+  font-size:13px;
+  color:#666;
+  margin-top:5px;
+}
+
+.conv-btn{
+  width:100%;
+  padding:14px;
+  background:#28a745;
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.conv-btn:disabled{
+  opacity:0.5;
+}
+
+.loading{
+  display:none;
+  text-align:center;
+  margin-top:15px;
+  font-weight:bold;
+  color:#555;
+}
+
+.conv-resultado{
+  margin-top:20px;
+  background:#f8f8f8;
+  padding:15px;
+  border-radius:8px;
+  font-weight:bold;
+  line-height:1.8;
+}
+
+.conv-copy{
+  margin-top:15px;
+  padding:10px;
+  width:100%;
+  border:none;
+  background:#333;
+  color:#fff;
+  border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="conv-container">
+
+<h2>🔄 Conversor de Combinaciones</h2>
+
+<p>Selecciona el sistema e introduce tus números:</p>
+
+<select class="conv-input" id="sistema">
+  <option value="">Elige combinación...</option>
+  <option value="10_3_6">10 números (3 si 6) 2ap</option>
+  <option value="11_3_6">11 números (3 si 6) 2ap</option>
+  <option value="12_3_6">12 números (3 si 6) 2ap</option>
+  <option value="13_3_6">13 números (3 si 6) 2ap</option>
+  <option value="10_4_6">10 números (4 si 6) 3ap</option>
+  <option value="8_5_6">08 números (5 si 6) 4ap</option>
+  <option value="9_5_6">09 números (5 si 6) 7ap</option>
+  <option value="15_4_6">15 números (4 si 6) 19ap</option>
+</select>
+
+<input class="conv-input"
+       disabled
+       id="numeros"
+       placeholder="Selecciona primero una combinación..."
+       type="text" />
+
+<div id="contador">0 / 0 números</div>
+
+<button class="conv-btn"
+        disabled
+        id="btnConvertir"
+        onclick="convertir()">
+Convertir combinación
+</button>
+
+<div class="loading" id="loading">
+⏳ Calculando combinaciones...
+</div>
+
+<div class="conv-resultado" id="resultado"></div>
+
+<button class="conv-copy"
+        id="btnCopiar"
+        onclick="copiar()"
+        style="display:none;">
+📋 Copiar combinación
+</button>
+
+</div>
+
+<script>
+
+const limitesSistema = {
+  "10_3_6": 10,
+  "11_3_6": 11,
+  "12_3_6": 12,
+  "13_3_6": 13,
+  "10_4_6": 10,
+  "8_5_6": 8,
+  "9_5_6": 9,
+  "15_4_6": 15
+};
+
+let limiteActual = 0;
+let resultadoTexto = "";
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  const input = document.getElementById("numeros");
+  const contador = document.getElementById("contador");
+  const btn = document.getElementById("btnConvertir");
+  const select = document.getElementById("sistema");
+
+  select.addEventListener("change", function(){
+
+    if(select.value !== ""){
+      limiteActual = limitesSistema[select.value];
+
+      input.disabled = false;
+      input.value = "";
+      input.placeholder = "Ej: 3,7,12...";
+      contador.innerHTML = "0 / " + limiteActual + " números";
+
+    } else {
+      input.disabled = true;
+      input.value = "";
+      limiteActual = 0;
+      contador.innerHTML = "0 / 0 números";
+    }
+
+    btn.disabled = true;
+    document.getElementById("resultado").innerHTML = "";
+    document.getElementById("btnCopiar").style.display = "none";
+  });
+
+  input.addEventListener("input", function(){
+
+    let raw = input.value;
+
+    raw = raw.replace(/[^0-9,]/g, "");
+
+    let terminaEnComa = raw.endsWith(",");
+
+    raw = raw.replace(/,+/g, ",");
+
+    if(raw.startsWith(",")) raw = raw.substring(1);
+
+    let partes = raw.split(",");
+
+    let numeros = [];
+    let duplicados = [];
+    let vistos = new Set();
+
+    partes.forEach((p, index) => {
+
+      if(p === "") return;
+
+      let esUltimo = (index === partes.length - 1);
+      let numeroEnConstruccion = esUltimo && !raw.endsWith(",");
+
+      if(p.length > 2) p = p.slice(0,2);
+
+      let num = parseInt(p);
+
+      if(!isNaN(num) && num >= 1 && num <= 49){
+
+        if(numeroEnConstruccion){
+
+          numeros.push(num);
+
+        } else {
+
+          if(vistos.has(num)){
+            duplicados.push(num);
+          } else {
+            vistos.add(num);
+            numeros.push(num);
+          }
+        }
+      }
+    });
+
+    if(numeros.length > limiteActual){
+      numeros = numeros.slice(0, limiteActual);
+    }
+
+    let nuevoValor = numeros.join(",");
+
+    if(terminaEnComa && numeros.length < limiteActual){
+      nuevoValor += ",";
+    }
+
+    input.value = nuevoValor;
+
+    contador.innerHTML =
+      numeros.length + " / " + limiteActual + " números";
+
+    if(duplicados.length > 0){
+      contador.innerHTML += " ⚠️ Repetidos";
+      contador.style.color = "red";
+    } else if(numeros.length === limiteActual){
+      contador.style.color = "green";
+    } else {
+      contador.style.color = "#666";
+    }
+
+    btn.disabled =
+      !(numeros.length === limiteActual &&
+      duplicados.length === 0);
+
+  });
+
+});
+
+function convertir(){
+
+  const loading = document.getElementById("loading");
+  const resultadoDiv = document.getElementById("resultado");
+  const input = document.getElementById("numeros");
+
+  let numsRaw = input.value
+    .split(",")
+    .map(n => parseInt(n))
+    .filter(n => !isNaN(n));
+
+  let set = new Set(numsRaw);
+
+  if(set.size !== numsRaw.length){
+    alert("❌ No se permiten números repetidos");
+    return;
+  }
+
+  if(numsRaw.length !== limiteActual){
+    alert("❌ Debes introducir exactamente " +
+      limiteActual + " números");
+    return;
+  }
+
+  for(let n of numsRaw){
+    if(n < 1 || n > 49){
+      alert("❌ Los números deben estar entre 1 y 49");
+      return;
+    }
+  }
+
+  loading.style.display = "block";
+  resultadoDiv.innerHTML = "";
+
+  setTimeout(() => {
+
+    const sistema =
+      document.getElementById("sistema").value;
+
+    let nums = [...numsRaw];
+
+    nums.sort((a,b)=>a-b);
+
+    let numsFormateados =
+      nums.map(n => n.toString().padStart(2,'0'));
+
+    let mapa = {};
+
+    numsFormateados.forEach((num, index) => {
+      mapa[(index+1).toString().padStart(2,'0')] = num;
+    });
+
+    let base = [];
+
+    if(sistema === "10_3_6"){
+      base = [
+        ["01","02","03","04","05","06"],
+        ["01","02","07","08","09","10"]
+      ];
+    }
+
+    if(sistema === "11_3_6"){
+      base = [
+        ["01","02","05","08","09","10"],
+        ["01","03","04","06","10","11"]
+      ];
+    }
+
+    if(sistema === "12_3_6"){
+      base = [
+        ["01","03","04","06","09","11"],
+        ["02","05","08","09","10","12"]
+      ];
+    }
+
+    if(sistema === "13_3_6"){
+      base = [
+        ["01","03","04","06","11","13"],
+        ["02","05","08","09","10","12"]
+      ];
+    }
+
+    if(sistema === "10_4_6"){
+      base = [
+        ["01","02","03","04","05","06"],
+        ["01","03","04","05","07","08"],
+        ["02","06","07","08","09","10"]
+      ];
+    }
+
+    if(sistema === "8_5_6"){
+      base = [
+        ["01","02","03","04","05","07"],
+        ["01","02","03","06","07","08"],
+        ["01","02","04","05","06","08"],
+        ["02","03","05","06","07","08"]
+      ];
+    }
+    
+    if(sistema === "15_4_6"){
+      base = [
+    ["01","02","04","10","13","14"],
+    ["01","02","05","06","08","12"],
+    ["01","02","05","10","11","15"],
+    ["01","03","04","06","07","11"],
+    ["01","03","11","12","13","14"],
+    ["01","05","08","09","14","15"],
+    ["01","06","08","09","12","14"],
+    ["01","07","09","10","12","15"],
+    ["02","03","04","08","09","10"],
+    ["02","03","05","07","09","13"],
+    ["02","03","06","09","13","15"],
+    ["02","04","06","07","10","12"],
+    ["02","07","08","11","14","15"],
+    ["03","04","05","12","14","15"],
+    ["03","05","07","08","10","13"],
+    ["03","06","08","10","13","15"],
+    ["04","05","06","07","13","15"],
+    ["04","08","09","11","12","13"],
+    ["05","06","09","10","11","14"]
+  ];
+}
+
+    if(sistema === "9_5_6"){
+      base = [
+    ["01","02","03","05","06","08"],
+    ["01","02","04","05","06","09"],
+    ["01","02","05","06","07","09"],
+    ["01","03","04","05","06","07"],
+    ["01","03","05","06","08","09"],
+    ["01","04","05","06","07","08"],
+    ["02","03","04","07","08","09"]
+   ];
+}
+    
+    let resultado = "";
+
+    base.forEach(fila => {
+      let nueva = fila.map(num => mapa[num]);
+      resultado += nueva.join(", ") + "<br>";
+    });
+
+    resultadoTexto = resultado.replace(/<br>/g, "\n");
+
+    resultadoDiv.innerHTML = resultado;
+
+    document.getElementById("btnCopiar").style.display =
+      "block";
+
+    loading.style.display = "none";
+
+  }, 600);
+
+}
+
+function copiar(){
+  navigator.clipboard.writeText(resultadoTexto);
+  alert("✅ Combinación copiada");
+}
+
+</script>
+
+</body>
+</html>
