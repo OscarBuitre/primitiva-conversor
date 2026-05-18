@@ -140,6 +140,10 @@ Convertir combinación
 📋 Copiar combinación
 </button>
 
+  <button class="conv-copy" onclick="volverApp()">
+📲 Volver a la app
+</button>
+
 </div>
 
 <script>
@@ -426,6 +430,12 @@ function copiar(){
   alert("✅ Combinación copiada");
 }
 
+function volverApp(){
+  if(typeof Android !== "undefined"){
+    Android.cerrarWebView();
+  }
+}
+  
 </script>
 
 </body>
