@@ -481,20 +481,20 @@ function copiar(){
 
   navigator.clipboard.writeText(resultadoTexto);
 
+  if(navigator.vibrate){
+    navigator.vibrate(40);
+  }
+
   const btn = document.getElementById("btnCopiar");
 
   const textoOriginal = btn.innerHTML;
 
   btn.innerHTML = "✅ Copiado al portapapeles";
-
   btn.style.background = "#1b8f3a";
 
   setTimeout(() => {
-
     btn.innerHTML = textoOriginal;
-
     btn.style.background = "#333";
-
   }, 1800);
 }
 
