@@ -102,6 +102,19 @@ h2{
   cursor:pointer;
 }
 
+  .conv-copy,
+  .btn-back,
+  .conv-btn{
+  transition:0.15s;
+}
+
+  .conv-copy:active,
+  .btn-back:active,
+  .conv-btn:active{
+   transform:scale(0.96);
+   opacity:0.85;
+}
+
 </style>
 
 </head>
@@ -440,8 +453,24 @@ function convertir(){
 }
 
 function copiar(){
+
   navigator.clipboard.writeText(resultadoTexto);
-  alert("✅ Combinación copiada");
+
+  const btn = document.getElementById("btnCopiar");
+
+  const textoOriginal = btn.innerHTML;
+
+  btn.innerHTML = "✅ Copiado al portapapeles";
+
+  btn.style.background = "#1b8f3a";
+
+  setTimeout(() => {
+
+    btn.innerHTML = textoOriginal;
+
+    btn.style.background = "#333";
+
+  }, 1800);
 }
 
 function volverApp(){
