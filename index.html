@@ -167,6 +167,12 @@ Convertir combinación
 📋 Copiar combinación
 </button>
 
+  <button class="conv-copy"
+        onclick="limpiarFormulario()"
+        style="background:#777;">
+🗑 Limpiar
+</button>
+
   <button class="conv-copy btn-back" onclick="volverApp()">
 📲 Volver a la app
 </button>
@@ -447,9 +453,28 @@ function convertir(){
       "block";
 
     loading.style.display = "none";
+    resultadoDiv.scrollIntoView({
+  behavior:"smooth"
+});
 
   }, 600);
 
+}
+
+  function limpiarFormulario(){
+
+  document.getElementById("numeros").value = "";
+  document.getElementById("resultado").innerHTML = "";
+  document.getElementById("btnCopiar").style.display = "none";
+
+  const contador = document.getElementById("contador");
+
+  contador.innerHTML =
+    "0 / " + limiteActual + " números";
+
+  contador.style.color = "#666";
+
+  document.getElementById("btnConvertir").disabled = true;
 }
 
 function copiar(){
