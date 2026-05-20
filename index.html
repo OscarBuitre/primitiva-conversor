@@ -20,6 +20,8 @@ body{
   max-width:700px;
   margin:auto;
   padding:20px;
+  padding-bottom:80px;
+  padding-bottom:calc(80px + env(safe-area-inset-bottom));
   background:#fff;
   min-height:100vh;
   box-sizing:border-box;
@@ -211,6 +213,9 @@ document.addEventListener("DOMContentLoaded", function(){
       input.value = "";
       input.placeholder = "Ej: 3,7,12...";
       contador.innerHTML = "0 / " + limiteActual + " números";
+      setTimeout(() => {
+  input.focus();
+}, 100);
 
     } else {
       input.disabled = true;
