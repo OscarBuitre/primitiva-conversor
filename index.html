@@ -504,9 +504,22 @@ function copiar(){
 }
 
 function volverApp(){
-  if(typeof Android !== "undefined"){
-    Android.cerrarWebView();
+
+  if(navigator.vibrate){
+    navigator.vibrate(40);
   }
+
+  if(typeof Android !== "undefined"){
+
+    Android.cerrarWebView();
+
+  }else{
+
+    window.location.href =
+    "https://play.google.com/store/apps/details?id=com.gac.primitivainteligente.app";
+
+  }
+
 }
   
 </script>
