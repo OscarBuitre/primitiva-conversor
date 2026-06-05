@@ -139,6 +139,7 @@ h2{
   <option value="13_3_6">13 números (3 si 6) 2ap</option>
   <option value="10_4_6">10 números (4 si 6) 3ap</option>
   <option value="8_5_6">08 números (5 si 6) 4ap</option>
+  <option value="8_3_3">08 números (3 si 3) 4ap</option>
   <option value="14_3_6">14 números (3 si 6) 4ap</option>
   <option value="15_3_6">15 números (3 si 6) 4ap</option>
   <option value="9_5_6">09 números (5 si 6) 7ap</option>
@@ -219,6 +220,7 @@ const limitesSistema = {
   "13_3_6": 13,
   "10_4_6": 10,
   "8_5_6": 8,
+  "8_3_3": 8,
   "9_5_6": 9,
   "15_3_5": 15,
   "14_3_6": 14,
@@ -436,6 +438,15 @@ function convertir(){
         ["01","02","03","06","07","08"],
         ["01","02","04","05","06","08"],
         ["02","03","05","06","07","08"]
+      ];
+    }
+
+    if(sistema === "8_3_3"){
+      base = [
+        ["01","02","03","04","05","06"],
+        ["01","02","03","04","07","08"],
+        ["01","02","05","06","07","08"],
+        ["03","04","05","06","07","08"]
       ];
     }
     
