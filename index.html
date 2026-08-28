@@ -137,6 +137,7 @@ h2{
   <option value="11_3_6">11 números (3 si 6) 2ap</option>
   <option value="12_3_6">12 números (3 si 6) 2ap</option>
   <option value="13_3_6">13 números (3 si 6) 2ap</option>
+  <option value="8_3_4">08 números (3 si 4) 3ap</option>
   <option value="8_4_5">08 números (4 si 5) 3ap</option>
   <option value="9_4_5">09 números (4 si 5) 3ap</option>
   <option value="10_4_6">10 números (4 si 6) 3ap</option>
@@ -147,6 +148,7 @@ h2{
   <option value="11_4_6">11 números (4 si 6) 5ap</option>
   <option value="16_3_6">16 números (3 si 6) 5ap</option>
   <option value="12_4_6">12 números (4 si 6) 6ap</option>
+  <option value="8_4_4">08 números (4 si 4) 7ap</option>
   <option value="9_5_6">09 números (5 si 6) 7ap</option>
   <option value="15_3_5">15 números (3 si 5) 7ap</option>
   <option value="16_3_5">16 números (3 si 5) 8ap</option>
@@ -239,6 +241,8 @@ const limitesSistema = {
   "9_4_5": 9,
   "16_3_6": 16,
   "16_3_5": 16,
+  "8_4_4": 7,
+  "8_3_4": 3,
   "15_4_6": 15
 };
 
@@ -446,6 +450,14 @@ function convertir(){
       ];
     }
 
+    if(sistema === "8_3_4"){
+      base = [
+    ["01","02","03","04","05","06"],
+    ["01","02","03","04","07","08"],
+    ["01","02","05","06","07","08"]
+];
+    }
+
 if(sistema === "9_4_5"){
       base = [
         ["01","02","03","04","05","06"],
@@ -601,6 +613,18 @@ if(sistema === "8_5_5"){
         ["02","04","06","08","11","12"],
         ["03","05","06","07","09","12"]
       ];
+    }
+
+    if(sistema === "8_4_4"){
+      base = [
+    ["01","02","03","04","05","06"],
+    ["01","02","03","04","05","07"],
+    ["01","02","03","04","05","08"],
+    ["01","02","03","06","07","08"],
+    ["01","04","05","06","07","08"],
+    ["02","03","04","06","07","08"],
+    ["02","03","05","06","07","08"]
+];
     }
     
     let resultado = "";
