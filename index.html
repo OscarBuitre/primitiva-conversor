@@ -133,6 +133,7 @@ h2{
 
 <select class="conv-input" id="sistema">
   <option value="">Elige combinación...</option>
+  <option value="9_3_5">9 números (3 si 5) 2ap</option>
   <option value="10_3_6">10 números (3 si 6) 2ap</option>
   <option value="11_3_6">11 números (3 si 6) 2ap</option>
   <option value="12_3_6">12 números (3 si 6) 2ap</option>
@@ -225,6 +226,7 @@ con La Primitiva.
 <script>
 
 const limitesSistema = {
+  "9_3_5": 9,
   "10_3_6": 10,
   "11_3_6": 11,
   "11_4_6": 11,
@@ -417,6 +419,13 @@ function convertir(){
     });
 
     let base = [];
+
+    if(sistema === "9_3_5"){
+      base = [
+  ["01","02","03","04","05","06"],
+  ["01","02","03","07","08","09"]
+];
+    }
 
     if(sistema === "10_3_6"){
       base = [
